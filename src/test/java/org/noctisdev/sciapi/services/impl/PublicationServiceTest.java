@@ -13,6 +13,7 @@ import org.noctisdev.sciapi.web.dto.response.BaseResponse;
 import org.noctisdev.sciapi.web.dto.response.PublicationResponse;
 
 import java.time.LocalDate;
+import java.util.Optional;
 import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -29,10 +30,13 @@ class PublicationServiceTest {
     private IPublicationRepository repository;
 
     private PublicationRequest publicationRequestDummy;
+    private Publication publicationDummy;
+    private UUID uuid = UUID.randomUUID();
 
     @BeforeEach
     public void init() {
         publicationRequestDummy = createPublicationRequestDummy();
+        publicationDummy = createPublicationDummy();
     }
 
     @Test
@@ -52,7 +56,36 @@ class PublicationServiceTest {
         assertEquals(publicationRequestDummy.content(), savedPublication.content());
     }
 
+    @Test
+    void givenUpdatePublicationRequestOk_WhenUpdatePublication_ThenAllOk() {
+
+        when(repository.findById(uuid)).thenReturn(Optional.of(publicationDummy));
+        when(repository.save(any(Publication.class))).thenAnswer(i -> i.getArgument(0));
+
+        BaseResponse response = publicationService.updatePublication(publicationRequestDummy, uuid);
+        PublicationResponse updatedPublication = (PublicationResponse) response.getData();
+
+        assertNotNull(updatedPublication);
+        assertEquals(publicationRequestDummy.title(), updatedPublication.title());
+        assertEquals(publicationRequestDummy.author(), updatedPublication.author());
+        assertEquals(publicationRequestDummy.content(), updatedPublication.content());
+    }
+
     private PublicationRequest createPublicationRequestDummy() {
-        return new PublicationRequest("title", "author", "content");
+        return new PublicationRequest("Titulo 1", "author 1", "content 1");
+    }
+
+    private Publication createPublicationDummy() {
+        Publication publication = new Publication();
+
+        publication.setUuid(uuid);
+        publication.setTitle("t");
+        publication.setAuthor("a");
+        publication.setContent("c");
+        publication.setCreatedAt(LocalDate.now());
+        publication.setUpdatedAt(LocalDate.now());
+        publication.setDeletedAt(null);
+
+        return publication;
     }
 }

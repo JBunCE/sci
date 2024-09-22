@@ -3,6 +3,8 @@ package org.noctisdev.sciapi.persistance.entities;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.type.SqlTypes;
 
 import java.time.LocalDate;
 import java.util.UUID;
@@ -13,6 +15,7 @@ import java.util.UUID;
 public class Publication {
 
     @Id
+    @JdbcTypeCode(SqlTypes.VARCHAR)
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID uuid;
 

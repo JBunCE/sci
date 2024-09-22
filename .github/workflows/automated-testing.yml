@@ -1,0 +1,19 @@
+name: automated testing action
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    name: unit testing
+    runs-on: ubuntu-22.04
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: run junit tests
+        run: |
+          mvn test
