@@ -11,7 +11,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -38,7 +37,7 @@ public class PublicationService implements IPublicationService {
         Publication savedPublication = repository.save(publication);
 
         return BaseResponse.builder()
-                .data(savedPublication)
+                .data(toPublicationResponse(savedPublication))
                 .message("The publication was saved successfully")
                 .success(Boolean.TRUE)
                 .status(200).httpStatus(HttpStatus.OK).build();
